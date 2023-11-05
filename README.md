@@ -6,6 +6,7 @@
 2. [Server Side](#server-side)
    - [Main API](#main-api)
      - [About the API](#about-the-api)
+     - [Endpoints](#main-api-endpoints)
      - [How to Use It](#how-to-use-it)
      - [Tools and Frameworks](#tools-and-frameworks)
    - [Dashboard API and Website](#dashboard-api-and-website)
@@ -28,6 +29,171 @@
 
 <a name="main-api"></a>
 ### Main API
+
+<a name="main-api-endpoints"></a>
+###Endpoints
+
+#### Welcome Page
+```http
+GET /
+```
+Serves the HTML welcome page for the Greenhouse Temperature and Humidity API.
+
+#### Change Target Building
+```http
+POST /change_target_building/
+Content-Type: application/json
+
+{
+  "building_id": [building_id]
+}
+```
+Endpoint to change the target building to the specified ID.
+
+#### Change Target Facility
+```http
+POST /change_target_facility/
+Content-Type: application/json
+
+{
+  "facility_id": [facility_id]
+}
+```
+Endpoint to change the target facility to the specified ID.
+
+#### Change Target Sensor Name
+```http
+POST /change_target_name/
+Content-Type: application/json
+
+{
+  "sensor_name": "[sensor_name]"
+}
+```
+Endpoint to change the target sensor to the specified name.
+
+#### Get Target Building
+```http
+GET /get_target_building/
+```
+Retrieves the currently targeted building.
+
+#### Get Target Facility
+```http
+GET /get_target_facility/
+```
+Retrieves the currently targeted facility.
+
+#### Get Target Sensor Name
+```http
+GET /get_target_name/
+```
+Retrieves the currently targeted sensor name.
+
+#### Create Facility
+```http
+POST /facility/
+Content-Type: application/json
+
+{
+  "facility": "[facility_object]"
+}
+```
+Creates a new facility entry with the given details.
+
+#### Create Building
+```http
+POST /building/
+Content-Type: application/json
+
+{
+  "building": "[building_object]"
+}
+```
+Creates a new building entry with the given details.
+
+#### Create Sensor
+```http
+POST /create_sensor/
+Content-Type: application/json
+
+{
+  "sensor": "[sensor_object]"
+}
+```
+Creates a new sensor or returns an existing one based on the serial number.
+
+#### Post Sensor Value
+```http
+POST /sensor_value/
+Content-Type: application/json
+
+{
+  "sensor_value": "[sensor_value_object]"
+}
+```
+Creates a new sensor value record.
+
+#### Create Alarm
+```http
+POST /alarm/
+Content-Type: application/json
+
+{
+  "alarm": "[alarm_object]"
+}
+```
+Creates a new alarm based on the sensor data.
+
+#### Get Sensor by Serial Number
+```http
+GET /get_sensor_by_serial/{serial_number}
+```
+Retrieves sensor details by its serial number.
+
+#### Dashboard Data
+```http
+GET /dashboard/
+```
+Retrieves dashboard data, including sensor values and alarms.
+
+#### Get Temperature Data by Sensor ID
+```http
+GET /get_temp_data/{sensor_id}
+```
+Fetches the latest temperature data for a given sensor ID.
+
+#### Get Humidity Data by Sensor ID
+```http
+GET /get_humid_data/{sensor_id}
+```
+Fetches the latest humidity data for a given sensor ID.
+
+#### Update Threshold Settings
+```http
+PUT /threshold-settings/
+Content-Type: application/json
+
+{
+  "sensor_type": "[sensor_type]",
+  "max_value": [max_value],
+  "low_value": [low_value]
+}
+```
+Updates the threshold settings for a given sensor type.
+
+#### Get Threshold Settings
+```http
+GET /threshold-settings/
+```
+Retrieves the list of all threshold settings for sensors.
+
+#### Get All Sensor Serial Numbers
+```http
+GET /get_all_sensor_serial_numbers
+```
+Retrieves all sensor serial numbers in the system.
+
 
 <a name="about-the-api"></a>
 #### About the API
