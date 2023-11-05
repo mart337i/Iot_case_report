@@ -33,6 +33,7 @@
 <a name="main-api-endpoints"></a>
 
 ### Endpoints
+The API facilitates greenhouse environment monitoring and management, handling sensor data for temperature and humidity, and allows for configuration changes and retrieval of current settings. It supports the creation of new facility, building, and sensor records, and offers a dashboard view for real-time data and alerts
 
 #### Welcome Page
 ```http
