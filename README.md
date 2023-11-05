@@ -31,13 +31,31 @@
 ### Main API
 
 <a name="main-api-endpoints"></a>
-###Endpoints
+
+### Endpoints
 
 #### Welcome Page
 ```http
 GET /
 ```
 Serves the HTML welcome page for the Greenhouse Temperature and Humidity API.
+
+#### Setup
+```http
+POST /change_target_building/
+Content-Type: application/json
+  {
+    "facility": {
+      "id": 0,
+      "beskrivelse": "string"
+    },
+    "building": {
+      "id": 0,
+      "name": "string",
+      "facility_id": 0
+    }
+  }
+```
 
 #### Change Target Building
 ```http
