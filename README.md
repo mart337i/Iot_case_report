@@ -6,7 +6,6 @@
 2. [Server Side](#server-side)
    - [Main API](#main-api)
      - [About the API](#about-the-api)
-     - [Endpoints](#main-api-endpoints)
      - [How to Use It](#how-to-use-it)
      - [Tools and Frameworks](#tools-and-frameworks)
    - [Dashboard API and Website](#dashboard-api-and-website)
@@ -30,9 +29,6 @@
 <a name="main-api"></a>
 ### Main API
 
-<a name="main-api-endpoints"></a>
-
-### Endpoints
 The API facilitates greenhouse environment monitoring and management, handling sensor data for temperature and humidity, and allows for configuration changes and retrieval of current settings. It supports the creation of new facility, building, and sensor records, and offers a dashboard view for real-time data and alerts
 
 #### Welcome Page
@@ -294,29 +290,38 @@ Retrieves all sensor serial numbers in the system.
 
 ### Nginx Configuration
 ```bash
-# Creates a server cluster that redirects to a unix socket
-upstream app_server {
+upstream fastapi_app_server {
     server unix:/home/pi/code/fastapi-nginx-gunicorn/run/gunicorn.sock fail_timeout=0;
+}
+
+upstream dashboard {
+    server 127.0.0.1:8000 fail_timeout=0;
 }
 
 server {
     listen 80;
     server_name meo.local;
+
     keepalive_timeout 5;
     client_max_body_size 4G;
 
     access_log /home/pi/code/fastapi-nginx-gunicorn/logs/nginx-access.log;
     error_log /home/pi/code/fastapi-nginx-gunicorn/logs/nginx-error.log;
 
-    location / {
+    # Route traffic to FastAPI for /api URLs
+    location /api {
+        proxy_pass http://fastapi_app_server/;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         proxy_set_header Host $http_host;
         proxy_redirect off;
+    }
 
-        if (!-f $request_filename) {
-            proxy_pass http://app_server;
-            break;
-        }
+    # Route all other traffic to Flask
+    location / {
+        proxy_pass http://dashboard/;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header Host $http_host;
+        proxy_redirect off;
     }
 }
 ```
