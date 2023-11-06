@@ -332,8 +332,8 @@ systemctl restart nginx.service
 superviser
 sudo supervisorctl reread
 sudo supervisorctl update
-sudo supervisorctl status fastapi-app
-sudo supervisorctl restart fastapi-app
+sudo supervisorctl status dashboard
+sudo supervisorctl restart dashboard
 
 ```
 
