@@ -25,7 +25,7 @@
 
 ## Introduction
 
-//Write about the case and how the program client and server you developed accomplished the goal
+The Greenhouse Environment Monitoring and Management System is an integrated setup combining embedded devices, a centralized server, and seamless networking. It provides continuous monitoring of conditions like temperature and humidity, ensuring ideal plant growth. Sensor data can be analyzed via a website or by the system it self, it will push alarms if any anomalies occurs. This cohesive system ensures agricultural efficiency and proactive management of greenhouse environments.
 
 <a name="server-side"></a>
 
@@ -36,6 +36,10 @@
 ### Main API and endpoints
 
 The API facilitates greenhouse environment monitoring and management, handling sensor data for temperature and humidity, and allows for configuration changes and retrieval of current settings. It supports the creation of new facility, building, and sensor records, and offers a dashboard view for real-time data and alerts
+
+***Endpoints***
+
+<details closed>
 
 #### Welcome Page
 
@@ -253,6 +257,7 @@ GET /get_all_sensor_serial_numbers
 ```
 
 Retrieves all sensor serial numbers in the system.
+</details>
 
 <a name="tools-and-frameworks"></a>
 
@@ -272,7 +277,7 @@ Retrieves all sensor serial numbers in the system.
 
     - Python Web Server Gateway Interface (WSGI)
 
-      - My Config
+      - My Config -> [Gunicorn](#gunicorn_custom)
 
   - Uvicorn (TLDR: Webserver)
     - This is part of FASTapi python framework
@@ -280,11 +285,13 @@ Retrieves all sensor serial numbers in the system.
   - Superviser (TLDR: SystemD but more encapsulated )
 
     - Supervisor is a client/server system that allows its users to monitor and control a number of processes on UNIX-like operating systems.
-    - My Config
+    - My Config -> [Supervisor](#supervisor_custom)
 
 <a name="dashboard-api-and-website"></a>
 
 ### Dashboard API and Website
+
+//add image of page
 
 <a name="about-the-dashboard"></a>
 
@@ -312,13 +319,36 @@ Retrieves all sensor serial numbers in the system.
 
 #### About the Server
 
-//Details about the server configuration
+The server is runnign Raspberry Pi OS Lite which is a lightweight version of the Raspberry Pi operating system, based on Debian Linux.
+
+ It is optimized for the Raspberry Pi hardware and is a command-line only interface, meaning no graphical desktop.
 
 <a name="how-to-use-it-2"></a>
 
 #### How to Use It
 
-//Instructions on how to configure the server
+```bash 
+
+Server commands
+
+Nginx
+commands
+systemctl enable nginx.service
+systemctl start nginx.service
+systemctl status nginx.service
+systemctl restart nginx.service
+
+superviser
+sudo supervisorctl reread
+sudo supervisorctl update
+sudo supervisorctl status fastapi-app
+sudo supervisorctl restart fastapi-app
+
+Gunicorn
+Test socket
+curl --unix-socket /home/sysadmin/code/fastapi-nginx-gunicorn/run/gunicorn.sock localhost/test
+
+```
 
 <a name="tools-and-frameworks-2"></a>
 
@@ -536,6 +566,8 @@ server {
 
 ### Gunicorn Configuration
 
+<a name="#gunicorn_custom"></a>
+
 ```bash
 #!/bin/bash
 # fastapi-app is used by the main api to startup
@@ -585,6 +617,8 @@ exec gunicorn main:app \
 ```
 
 ### Supervisor
+
+<a name="supervisor_custom"></a>
 
 ```bash
 
