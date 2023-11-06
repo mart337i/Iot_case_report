@@ -27,7 +27,7 @@
 ## Server Side
 
 <a name="main-api"></a>
-### Main API
+### Main API and endpoints
 
 The API facilitates greenhouse environment monitoring and management, handling sensor data for temperature and humidity, and allows for configuration changes and retrieval of current settings. It supports the creation of new facility, building, and sensor records, and offers a dashboard view for real-time data and alerts
 
@@ -209,18 +209,196 @@ GET /get_all_sensor_serial_numbers
 ```
 Retrieves all sensor serial numbers in the system.
 
-
-<a name="about-the-api"></a>
-#### About the API
-//Details about the main API
-
-<a name="how-to-use-it"></a>
-#### How to Use It
-//Instructions on how to use the main API
-
 <a name="tools-and-frameworks"></a>
 #### Tools and Frameworks
-//List and description of tools and frameworks used
+- Tools
+  - Nginx (TLDR: I used it mostly has a reverse proxy )
+    - NGINX is a high‑performance, highly scalable web server and reverse proxy
+      - My Nginx config
+        
+        ```Nginx
+          
+          #Base config with changes
+
+          user pi;
+          worker_processes auto;
+          pid /run/nginx.pid;
+          error_log /var/log/nginx/error.log;
+          include /etc/nginx/modules-enabled/*.conf;
+
+          events {
+                  worker_connections 768;
+                  # multi_accept on;
+          }
+
+          http {
+
+                  ##
+                  # Basic Settings
+                  ##
+
+                  sendfile on;
+                  tcp_nopush on;
+                  types_hash_max_size 2048;
+                  large_client_header_buffers 8 16k;
+                  client_header_timeout 32;
+                  # server_tokens off;
+
+                  # server_names_hash_bucket_size 64;
+                  # server_name_in_redirect off;
+
+                  include /etc/nginx/mime.types;
+                  default_type application/octet-stream;
+
+                  ##
+                  # SSL Settings
+                  ##
+
+                  ssl_protocols TLSv1 TLSv1.1 TLSv1.2 TLSv1.3; # Dropping SSLv3, ref: POODLE
+                  ssl_prefer_server_ciphers on;
+
+                  ##
+                  # Logging Settings
+                  ##
+
+                  access_log /var/log/nginx/access.log;
+
+                  ##
+                  # Gzip Settings
+                  ##
+
+                  gzip on;
+
+                  # gzip_vary on;
+                  # gzip_proxied any;
+                  # gzip_comp_level 6;
+                  # gzip_buffers 16 8k;
+                  # gzip_http_version 1.1;
+                  # gzip_types text/plain text/css application/json application/javascript text/xml application/xml application/xml+rss text/javascript;
+
+                  ##
+                  # Virtual Host Configs
+                  ##
+
+                  include /etc/nginx/conf.d/*.conf;
+                  include /etc/nginx/sites-enabled/*;
+          }
+
+          #---------------------------------------Custom_config--------------------------------------------# 
+
+          upstream fastapi_app_server {
+              server unix:/home/pi/code/fastapi-nginx-gunicorn/run/gunicorn.sock fail_timeout=0;
+          }
+
+          upstream dashboard {
+              server 127.0.0.1:8000 fail_timeout=16;
+          }
+
+          server {
+              listen 80;
+              server_name meo.local;
+
+              keepalive_timeout 5;
+              client_max_body_size 8k;
+
+              access_log /home/pi/code/fastapi-nginx-gunicorn/logs/nginx-access.log;
+              error_log /home/pi/code/fastapi-nginx-gunicorn/logs/nginx-error.log;
+
+              # Route traffic to FastAPI for /api URLs
+              location /api/ {
+                  proxy_pass http://fastapi_app_server/;
+                  proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+                  proxy_set_header Host $http_host;
+                  proxy_redirect off;
+              }
+
+              # Route all other traffic to Dashboard
+              location / {
+                  proxy_pass http://dashboard/;
+                  proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+                  proxy_set_header Host $http_host;
+                  proxy_redirect off;
+              }
+          }
+          
+   
+
+  - Gunicorn
+    - Python Web Server Gateway Interface (WSGI)
+       - My Config
+          ```
+          #!/bin/bash
+          # fastapi-app is used by the main api to startup
+          NAME=fastapi-app
+          DIR=/home/pi/code/fastapi-nginx-gunicorn
+          USER=pi
+          GROUP=pi
+          WORKERS=3
+          WORKER_CLASS=uvicorn.workers.UvicornWorker
+          VENV=$DIR/.venv/bin/activate
+          BIND=unix:$DIR/run/gunicorn.sock
+          LOG_LEVEL=info
+
+          cd $DIR
+          source $VENV
+
+          exec gunicorn main:app
+
+          -----------New File ----------------
+
+          #!/bin/bash
+          # This is used to start the dashboard app
+          NAME=dashboard
+          DIR=/home/pi/code/dashboard_fastapi-nginx-gunicorn
+          USER=pi
+          GROUP=pi
+          WORKERS=3
+          WORKER_CLASS=uvicorn.workers.UvicornWorker
+          VENV=$DIR/.venv/bin/activate
+          BIND=127.0.0.1:8000
+          LOG_LEVEL=info
+
+          cd $DIR
+          source $VENV
+
+          exec gunicorn main:app \
+            --name $NAME \
+            --workers $WORKERS \
+            --worker-class $WORKER_CLASS \
+            --user=$USER \
+            --group=$GROUP \
+            --bind=$BIND \
+            --log-level=$LOG_LEVEL \
+            --log-file=-
+          
+          ```
+  - Uvicorn (TLDR: Webserver)
+    - This is part of FASTapi python framework
+  - Mariadb (TLDR : Database)
+  - Superviser (TLDR: SystemD but more encapsulated )
+    - Supervisor is a client/server system that allows its users to monitor and control a number of processes on UNIX-like operating systems.
+    - My Config 
+        ```bash
+        
+          #Fastapi app / main API : this calles the gunicorn_start bash script  
+          [program:fastapi-app]
+          command=/home/pi/code/fastapi-nginx-gunicorn/gunicorn_start
+          user=pi
+          autostart=true
+          autorestart=true
+          redirect_stderr=true
+          stdout_logfile=/home/pi/code/fastapi-nginx-gunicorn/logs/gunicorn-error.log
+
+          -----------New File ----------------
+
+          #Dashboard : this calles the gunicorn_start bash script  
+          [program:dashboard]
+          command=/home/pi/code/dashboard_fastapi-nginx-gunicorn/gunicorn_start
+          user=pi
+          autostart=true
+          autorestart=true
+          redirect_stderr=true
+          stdout_logfile=/home/pi/code/dashboard_fastapi-nginx-gunicorn/logs/gunicorn-error.log ```
 
 <a name="dashboard-api-and-website"></a>
 ### Dashboard API and Website
@@ -260,7 +438,7 @@ Retrieves all sensor serial numbers in the system.
 
 <a name="about-the-client"></a>
 #### About the Client
-//Details about the Linux-based client
+The client is a raspberry 3 using grovepi sensors  
 
 <a name="how-to-use-it-3"></a>
 #### How to Use It
@@ -268,7 +446,51 @@ Retrieves all sensor serial numbers in the system.
 
 <a name="tools-and-frameworks-3"></a>
 #### Tools and Frameworks
-//List and description of tools and frameworks used for the Linux-based client
+- SystemD
+  - systemd is system and service manager for most Unix like operating systems
+    As the system boots up, the first process created, i.e. init process with 
+    PID = 1, is systemd system that initiates the userspace services.
+
+    For this project it is used to start the client service, to collect information from the sensors. 
+    The main benefit is the automatic start on boot and the auto restart on failiure.
+    <br/><br/>
+  - SystemD config
+
+    ```bash
+    [Unit]
+    Description=embeded service
+    After=multi-user.target
+
+    [Service]
+    StartLimitBurst=0
+    Type=simple
+    Restart=on-failure
+    StartLimitIntervalSec=10
+    ExecStart=/usr/bin/python3 /home/pi/code/embeded_device/main.py
+
+    [Install]
+    WantedBy=multi-user.target
+    ```
+
+
+- Python libs
+  - grovepi
+    - open-source platform for connecting Grove Sensors to the Rasberry Pi.
+  - datetime
+    - Used for constructing datetime objects.
+  - requests
+    - allows you to send HTTP/1.1 requests extremely easily. 
+  - python-dotenv
+    - Python-dotenv reads key-value pairs from a .env file
+  - json
+    - built-in package which can be used to work with JSON data.
+  - logging
+    - provides a flexible framework for writing log messages 
+  - time
+    - provides functions for handling time-related tasks (Only used the sleep method)
+
+
+
 
 <a name="embedded-device"></a>
 ### Embedded Device
@@ -293,19 +515,20 @@ Retrieves all sensor serial numbers in the system.
 #### File structure 
 ```bash
 
--/home/pi/code 
----dashboard
----fastapi (Main api)
----Nginx error and accses log for both
+/home/pi/code
+|   dashboard
+|   fastapi (Main api)
+|   Nginx_log (Error and access log for both)
+|
+/etc/nginx
+|   nginx.conf (Base config)
+|   sites-enabled
+|       fastapi-app.conf (Custom config)
+|
+/etc/supervisor/conf.d
+    dashboard.conf (Dashboard config)
+    fastapi-app.conf (Fastapi config)
 
--/etc/nginx
----nginx.conf (Base config)
----sites-enabled/
----fastapi-app.conf (Custom config)
-
--/etc/superviser/conf.d
----dashboard.conf (Dashboard config)
----fastapi-app.conf (Fastapi config)
 ```
 
 #### Git guidelines
@@ -332,176 +555,17 @@ Not all of the following has been used but is still consideres part of the Code 
 ```
 
 ### Nginx Configuration
-```bash
 
-#Base config with changes
-
-user pi;
-worker_processes auto;
-pid /run/nginx.pid;
-error_log /var/log/nginx/error.log;
-include /etc/nginx/modules-enabled/*.conf;
-
-events {
-        worker_connections 768;
-        # multi_accept on;
-}
-
-http {
-
-        ##
-        # Basic Settings
-        ##
-
-        sendfile on;
-        tcp_nopush on;
-        types_hash_max_size 2048;
-        large_client_header_buffers 8 16k;
-        client_header_timeout 32;
-        # server_tokens off;
-
-        # server_names_hash_bucket_size 64;
-        # server_name_in_redirect off;
-
-        include /etc/nginx/mime.types;
-        default_type application/octet-stream;
-
-        ##
-        # SSL Settings
-        ##
-
-        ssl_protocols TLSv1 TLSv1.1 TLSv1.2 TLSv1.3; # Dropping SSLv3, ref: POODLE
-        ssl_prefer_server_ciphers on;
-
-        ##
-        # Logging Settings
-        ##
-
-        access_log /var/log/nginx/access.log;
-
-        ##
-        # Gzip Settings
-        ##
-
-        gzip on;
-
-        # gzip_vary on;
-        # gzip_proxied any;
-        # gzip_comp_level 6;
-        # gzip_buffers 16 8k;
-        # gzip_http_version 1.1;
-        # gzip_types text/plain text/css application/json application/javascript text/xml application/xml application/xml+rss text/javascript;
-
-        ##
-        # Virtual Host Configs
-        ##
-
-        include /etc/nginx/conf.d/*.conf;
-        include /etc/nginx/sites-enabled/*;
-}
-
-#---------------------------------------Custom_config--------------------------------------------# 
-
-upstream fastapi_app_server {
-    server unix:/home/pi/code/fastapi-nginx-gunicorn/run/gunicorn.sock fail_timeout=0;
-}
-
-upstream dashboard {
-    server 127.0.0.1:8000 fail_timeout=16;
-}
-
-server {
-    listen 80;
-    server_name meo.local;
-
-    keepalive_timeout 5;
-    client_max_body_size 8k;
-
-    access_log /home/pi/code/fastapi-nginx-gunicorn/logs/nginx-access.log;
-    error_log /home/pi/code/fastapi-nginx-gunicorn/logs/nginx-error.log;
-
-    # Route traffic to FastAPI for /api URLs
-    location /api/ {
-        proxy_pass http://fastapi_app_server/;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header Host $http_host;
-        proxy_redirect off;
-    }
-
-    # Route all other traffic to Dashboard
-    location / {
-        proxy_pass http://dashboard/;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header Host $http_host;
-        proxy_redirect off;
-    }
-}
-```
 
 ### Gunicorn Configuration
 ```bash
-NAME=fastapi-app
-DIR=/home/pi/code/fastapi-nginx-gunicorn
-USER=pi
-GROUP=pi
-WORKERS=3
-WORKER_CLASS=uvicorn.workers.UvicornWorker
-VENV=$DIR/.venv/bin/activate
-BIND=unix:$DIR/run/gunicorn.sock
-LOG_LEVEL=info
 
-cd $DIR
-source $VENV
-
-exec gunicorn main:app
-
-
-#!/bin/bash
-
-NAME=dashboard
-DIR=/home/pi/code/dashboard_fastapi-nginx-gunicorn
-USER=pi
-GROUP=pi
-WORKERS=3
-WORKER_CLASS=uvicorn.workers.UvicornWorker
-VENV=$DIR/.venv/bin/activate
-BIND=127.0.0.1:8000
-LOG_LEVEL=info
-
-cd $DIR
-source $VENV
-
-exec gunicorn main:app \
-  --name $NAME \
-  --workers $WORKERS \
-  --worker-class $WORKER_CLASS \
-  --user=$USER \
-  --group=$GROUP \
-  --bind=$BIND \
-  --log-level=$LOG_LEVEL \
-  --log-file=-
- 
 ```
 
 ### Supervisor
 ```bash
 
-[program:fastapi-app]
-command=/home/pi/code/fastapi-nginx-gunicorn/gunicorn_start
-user=pi
-autostart=true
-autorestart=true
-redirect_stderr=true
-stdout_logfile=/home/pi/code/fastapi-nginx-gunicorn/logs/gunicorn-error.log
-
-
-[program:dashboard]
-command=/home/pi/code/dashboard_fastapi-nginx-gunicorn/gunicorn_start
-user=pi
-autostart=true
-autorestart=true
-redirect_stderr=true
-stdout_logfile=/home/pi/code/dashboard_fastapi-nginx-gunicorn/logs/gunicorn-error.log
+[
 
 ```
 
@@ -525,7 +589,7 @@ OpenSSH (v6)               ALLOW       Anywhere (v6)
 - Fail2ban (SSH Brutefore attack protecion)
 - JTW or another token based api security
 - SSL Cert
-- 0auth for dashbaord
+- auth0 for dashboard (Maybe over engineering)
 
 
 
