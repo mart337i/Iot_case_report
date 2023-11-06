@@ -287,6 +287,23 @@ Retrieves all sensor serial numbers in the system.
     - Supervisor is a client/server system that allows its users to monitor and control a number of processes on UNIX-like operating systems.
     - My Config -> [Supervisor](#supervisor_custom)
 
+- Framework
+  - fastapi:
+    -  A modern, fast web framework for building APIs with Python based on standard Python type hints.
+  - SQLAlchemy: 
+    - A powerful SQL toolkit and Object-Relational Mapping (ORM) library for Python that allows for flexible database access and management.
+  - uvicorn: 
+    - An ASGI server implementation for Python, serving as a lightning-fast foundation for ASGI applications like those built with FastAPI.
+  - logging: 
+    - A standard Python library for implementing flexible event logging systems for applications and libraries.
+  - mariadb: 
+    - A Python library that facilitates connection to MariaDB databases, enabling operations like queries, updates, and schema changes.
+  - mysqlclient: 
+    - A fork of MySQL-python, it is a Python database connector for connecting to MySQL databases that provides compatibility with MySQL and MariaDB.
+  - gunicorn: 
+    - A Python WSGI HTTP Server for UNIX systems that serves as a reliable and efficient interface between web applications and web servers.
+
+
 <a name="dashboard-api-and-website"></a>
 
 ### Dashboard API and Website
@@ -303,13 +320,62 @@ Retrieves all sensor serial numbers in the system.
 
 #### How to Use It
 
-//Instructions on how to use the dashboard
+```bash 
+
+Nginx
+commands
+systemctl enable nginx.service
+systemctl start nginx.service
+systemctl status nginx.service
+systemctl restart nginx.service
+
+superviser
+sudo supervisorctl reread
+sudo supervisorctl update
+sudo supervisorctl status fastapi-app
+sudo supervisorctl restart fastapi-app
+
+```
 
 <a name="tools-and-frameworks-1"></a>
 
+
 #### Tools and Frameworks
 
-//List and description of tools and frameworks used for dashboard
+- Tools
+
+  - Nginx (TLDR: I used it mostly has a reverse proxy )
+
+    - NGINX is a high‑performance, highly scalable web server and reverse proxy
+
+      - Base Nginx config -> [Base Nginx config](#nginx_base_configuration)
+      - Custom Nginx config -> [Custom Nginx config](#nginx_custom_configuration)
+
+
+  - Gunicorn
+
+    - Python Web Server Gateway Interface (WSGI)
+
+      - My Config -> [Gunicorn](#gunicorn-configuration)
+
+  - Uvicorn (TLDR: Webserver)
+    - This is part of FASTapi python framework
+  - Mariadb (TLDR : Database)
+  - Superviser (TLDR: SystemD but more encapsulated )
+
+    - Supervisor is a client/server system that allows its users to monitor and control a number of processes on UNIX-like operating systems.
+    - My Config -> [Supervisor](#supervisor_custom)
+
+- Framework
+  - fastapi:
+    -  A modern, fast web framework for building APIs with Python based on standard Python type hints.
+  - uvicorn: 
+    - An ASGI server implementation for Python, serving as a lightning-fast foundation for ASGI applications like those built with FastAPI.
+  - logging: 
+    - A standard Python library for implementing flexible event logging systems for applications and libraries.
+  - gunicorn: 
+    - A Python WSGI HTTP Server for UNIX systems that serves as a reliable and efficient interface between web applications and web servers.
+
 
 <a name="server-configuration"></a>
 
