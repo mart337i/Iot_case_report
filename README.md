@@ -288,14 +288,126 @@ Retrieves all sensor serial numbers in the system.
 <a name="server-configuration-1"></a>
 ## Server Configuration
 
+### Code of conduct
+
+#### File structure 
+```bash
+
+-/home/pi/code 
+---dashboard
+---fastapi (Main api)
+---Nginx error and accses log for both
+
+-/etc/nginx
+---nginx.conf (Base config)
+---sites-enabled/
+---fastapi-app.conf (Custom config)
+
+-/etc/superviser/conf.d
+---dashboard.conf (Dashboard config)
+---fastapi-app.conf (Fastapi config)
+```
+
+#### Git guidelines
+Not all of the following has been used but is still consideres part of the Code conduct.
+```
+    [FIX] for bug fixes: mostly used in stable version but also valid if you are fixing a recent bug in development version;
+
+    [REF] for refactoring: when a feature is heavily rewritten;
+
+    [ADD] for adding new modules;
+
+    [REM] for removing resources: removing dead code, removing views, removing modules, …;
+
+    [REV] for reverting commits: if a commit causes issues or is not wanted reverting it is done using this tag;
+
+    [MOV] for moving files: use git move and do not change content of moved file otherwise Git may loose track and history of the file; also used when moving code from one file to another;
+
+    [IMP] for improvements: most of the changes done in development version are incremental improvements not related to another tag;
+
+    [MERGE] for merge commits: used in forward port of bug fixes but also as main commit for feature involving several separated commits;
+
+    [I18N] for changes in translation files;
+
+```
+
 ### Nginx Configuration
 ```bash
+
+#Base config with changes
+
+user pi;
+worker_processes auto;
+pid /run/nginx.pid;
+error_log /var/log/nginx/error.log;
+include /etc/nginx/modules-enabled/*.conf;
+
+events {
+        worker_connections 768;
+        # multi_accept on;
+}
+
+http {
+
+        ##
+        # Basic Settings
+        ##
+
+        sendfile on;
+        tcp_nopush on;
+        types_hash_max_size 2048;
+        large_client_header_buffers 8 16k;
+        client_header_timeout 32;
+        # server_tokens off;
+
+        # server_names_hash_bucket_size 64;
+        # server_name_in_redirect off;
+
+        include /etc/nginx/mime.types;
+        default_type application/octet-stream;
+
+        ##
+        # SSL Settings
+        ##
+
+        ssl_protocols TLSv1 TLSv1.1 TLSv1.2 TLSv1.3; # Dropping SSLv3, ref: POODLE
+        ssl_prefer_server_ciphers on;
+
+        ##
+        # Logging Settings
+        ##
+
+        access_log /var/log/nginx/access.log;
+
+        ##
+        # Gzip Settings
+        ##
+
+        gzip on;
+
+        # gzip_vary on;
+        # gzip_proxied any;
+        # gzip_comp_level 6;
+        # gzip_buffers 16 8k;
+        # gzip_http_version 1.1;
+        # gzip_types text/plain text/css application/json application/javascript text/xml application/xml application/xml+rss text/javascript;
+
+        ##
+        # Virtual Host Configs
+        ##
+
+        include /etc/nginx/conf.d/*.conf;
+        include /etc/nginx/sites-enabled/*;
+}
+
+#---------------------------------------Custom_config--------------------------------------------# 
+
 upstream fastapi_app_server {
     server unix:/home/pi/code/fastapi-nginx-gunicorn/run/gunicorn.sock fail_timeout=0;
 }
 
 upstream dashboard {
-    server 127.0.0.1:8000 fail_timeout=0;
+    server 127.0.0.1:8000 fail_timeout=16;
 }
 
 server {
@@ -303,20 +415,20 @@ server {
     server_name meo.local;
 
     keepalive_timeout 5;
-    client_max_body_size 4G;
+    client_max_body_size 8k;
 
     access_log /home/pi/code/fastapi-nginx-gunicorn/logs/nginx-access.log;
     error_log /home/pi/code/fastapi-nginx-gunicorn/logs/nginx-error.log;
 
     # Route traffic to FastAPI for /api URLs
-    location /api {
+    location /api/ {
         proxy_pass http://fastapi_app_server/;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         proxy_set_header Host $http_host;
         proxy_redirect off;
     }
 
-    # Route all other traffic to Flask
+    # Route all other traffic to Dashboard
     location / {
         proxy_pass http://dashboard/;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
@@ -342,11 +454,38 @@ cd $DIR
 source $VENV
 
 exec gunicorn main:app
+
+
+#!/bin/bash
+
+NAME=dashboard
+DIR=/home/pi/code/dashboard_fastapi-nginx-gunicorn
+USER=pi
+GROUP=pi
+WORKERS=3
+WORKER_CLASS=uvicorn.workers.UvicornWorker
+VENV=$DIR/.venv/bin/activate
+BIND=127.0.0.1:8000
+LOG_LEVEL=info
+
+cd $DIR
+source $VENV
+
+exec gunicorn main:app \
+  --name $NAME \
+  --workers $WORKERS \
+  --worker-class $WORKER_CLASS \
+  --user=$USER \
+  --group=$GROUP \
+  --bind=$BIND \
+  --log-level=$LOG_LEVEL \
+  --log-file=-
  
 ```
 
 ### Supervisor
 ```bash
+
 [program:fastapi-app]
 command=/home/pi/code/fastapi-nginx-gunicorn/gunicorn_start
 user=pi
@@ -355,5 +494,38 @@ autorestart=true
 redirect_stderr=true
 stdout_logfile=/home/pi/code/fastapi-nginx-gunicorn/logs/gunicorn-error.log
 
+
+[program:dashboard]
+command=/home/pi/code/dashboard_fastapi-nginx-gunicorn/gunicorn_start
+user=pi
+autostart=true
+autorestart=true
+redirect_stderr=true
+stdout_logfile=/home/pi/code/dashboard_fastapi-nginx-gunicorn/logs/gunicorn-error.log
+
 ```
+
+### Firewall settings
+```bash
+Status: active
+
+To                         Action      From
+--                         ------      ----
+OpenSSH                    ALLOW       Anywhere                  
+22                         ALLOW       Anywhere                  
+80                         ALLOW       Anywhere                  
+443                        ALLOW       Anywhere                  
+OpenSSH (v6)               ALLOW       Anywhere (v6)             
+22 (v6)                    ALLOW       Anywhere (v6)             
+80 (v6)                    ALLOW       Anywhere (v6)             
+443 (v6)                   ALLOW       Anywhere (v6) 
+```
+
+### Still missing 
+- Fail2ban (SSH Brutefore attack protecion)
+- JTW or another token based api security
+- SSL Cert
+- 0auth for dashbaord
+
+
 
