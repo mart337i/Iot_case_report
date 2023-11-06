@@ -277,7 +277,7 @@ Retrieves all sensor serial numbers in the system.
 
     - Python Web Server Gateway Interface (WSGI)
 
-      - My Config -> [Gunicorn](#gunicorn_custom)
+      - My Config -> [Gunicorn](#gunicorn-configuration)
 
   - Uvicorn (TLDR: Webserver)
     - This is part of FASTapi python framework
@@ -566,7 +566,7 @@ server {
 
 ### Gunicorn Configuration
 
-<a name="#gunicorn_custom"></a>
+<a name="#gunicorn-configuration"></a>
 
 ```bash
 #!/bin/bash
