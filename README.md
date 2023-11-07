@@ -27,7 +27,7 @@
 4. [Server Configuration](#server-configuration-1)
 5. [Still missing](#still_missing)
 6. [conclusion](#conclusion)
-7. [glossary](#glossary)
+7. [Glossary](#glossary)
 
 <a name="introduction"></a>
 
@@ -486,12 +486,25 @@ The client is a raspberry 3 using grovepi sensors
 
 #### How to Use It
 
-Using an ssh client on the client device and use the following `git clone git@github.com:mart337i/embeded_device.git`
+### Step 1: Connecting via SSH
+1. Open your SSH client of choice on your computer.
+2. Connect to the client device using its IP address or hostname.
 
-Make sure python3 is installed along with everything in the requirements.txt file
-The requirements.txt can be installed with `python3 -m pip<version> -r requirements.txt`
+### Step 2: Cloning the Repository
+1. Once connected via SSH, navigate to the directory where you want to clone the repository.
+2. Clone the `embedded_device` repository using the following command: `git clone git@github.com:mart337i/embeded_device.git`
 
-and then just setup the [Systemd](#Systemd_config) unit file and run the systemd commands shown below
+### Step 3: Installing Python and Dependencies
+1. Ensure Python 3 is installed on the client device. If not, install it using the device's package manager.
+2. Navigate to the repository directory: `cd embeded_device`
+
+3. Install the required Python packages listed in `requirements.txt` with the following command: `python3 -m pip install -r requirements.txt`
+
+
+### Step 4: Setting Up Systemd Service
+1. Set up the Systemd unit file by creating a new file with the `.service` extension in the `/etc/systemd/system/` directory.
+2. Copy the Systemd configuration from the provided [Systemd](#Systemd_config) section into this new file.
+3. Run the systemd commands listed below in that order
 
 **systemd commands** 
 ```bash
@@ -566,9 +579,29 @@ I am using the M5GO, powered by the ESP32 chip, which is an embedded device desi
 
 #### How to Use It
 
-To use the program simply run `git clone git@github.com:mart337i/embeded_device.git` from the device you are deploying with using platformIO. And then simply press the `->` to upload(Also and image below)
+This guide assumes that you have PlatformIO installed and set up on your device. If you do not have PlatformIO installed, please visit the [PlatformIO installation guide](https://docs.platformio.org/en/latest/core/installation.html) before proceeding.
 
+##### Step 1: Cloning the Repository
+1. Open your terminal or command line interface.
+2. Navigate to the directory where you want to clone the repository.
+3. Run the following command to clone the `embedded_device` repository: `git clone git@github.com:mart337i/embedded_device.git`
+
+##### Step 2: Opening the Project in PlatformIO
+1. Launch PlatformIO from your system's application menu or command line.
+2. In PlatformIO, go to 'File' > 'Open Project'.
+3. Navigate to the directory where you cloned the repository and open it.
+
+##### Step 3: Uploading the Code to the Device
+1. Connect your device to your computer via USB.
+  1.1 If you like me run into permission error on the serial port run 
+    `sudo chown <yourname> /dev/<usb port name like : ttyUSB0>`
+2. Select the correct serial port and board configuration in PlatformIO.
+3. Press the 'Upload' button, represented by a right arrow (->), located in the PlatformIO toolbar (Image below).
+
+After completing these steps, the code should be uploaded to your device, and it should be running the program.
 ![PlatformIO upload](img/platformIO_upload.png "platform io upload")
+
+The M5GO will automaticly restart and run the you pushed to it.
 
 <a name="tools-and-frameworks-4"></a>
 
@@ -868,7 +901,7 @@ Not all of the following has been used but is still consideres part of the Code 
 
 ### Still missing overall
 
-- Fail2ban (SSH Brutefore attack protecion)
+- Fail2ban (SSH Brute-force attack protection)
 - JTW or another token based api security
 - SSL Cert
 - auth0 for dashboard (Maybe over engineering)
