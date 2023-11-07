@@ -27,6 +27,22 @@
 
 The Greenhouse Environment Monitoring and Management System is an integrated setup combining embedded devices, a centralized server, and seamless networking. It provides continuous monitoring of conditions like temperature and humidity, ensuring ideal plant growth. Sensor data can be analyzed via a website or by the system it self, it will push alarms if any anomalies occurs. This cohesive system ensures agricultural efficiency and proactive management of greenhouse environments.
 
+-------------------------------------------------------------------------------------
+
+## Architecture
+
+- Service-Oriented Architectures: using souce control disign:  manyrepo instead of monorepo
+- 
+
+### ER diagram
+![ER diagram](img/Er.png "ER diagram")
+
+### System Design diagram 
+### Design principles
+
+- KISS (Keep It Simple, Stupid): 
+
+-------------------------------------------------------------------------------------
 <a name="server-side"></a>
 
 ## Server Side
@@ -307,14 +323,14 @@ Retrieves all sensor serial numbers in the system.
 <a name="dashboard-api-and-website"></a>
 
 ### Dashboard API and Website
+![Dashboard](img/Screenshot%20from%202023-11-07%2014-26-26.png "Dashboard")
 
-//add image of page
 
 <a name="about-the-dashboard"></a>
 
 #### About the Dashboard
 
-//Details about the dashboard API and website
+The dashboard is a seprate application to the main API(FastApi-app) and it get 
 
 <a name="how-to-use-it-1"></a>
 
@@ -422,6 +438,8 @@ curl --unix-socket /home/sysadmin/code/fastapi-nginx-gunicorn/run/gunicorn.sock 
 
 //List and description of tools and frameworks used for server configuration
 
+-------------------------------------------------------------------------------------
+
 <a name="client-side"></a>
 
 ## Client Side
@@ -513,6 +531,9 @@ The client is a raspberry 3 using grovepi sensors
 //List and description of tools and frameworks used for the embedded device
 
 <a name="server-configuration-1"></a>
+
+-------------------------------------------------------------------------------------
+
 
 ## Server Configuration
 Server configurations
@@ -780,3 +801,6 @@ Not all of the following has been used but is still consideres part of the Code 
 - JTW or another token based api security
 - SSL Cert
 - auth0 for dashboard (Maybe over engineering)
+- Hide nginx version i network tab
+- Block accses to doc files 
+
