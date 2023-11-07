@@ -41,7 +41,7 @@ The Greenhouse Environment Monitoring and Management System is an integrated set
 
 - Service-Oriented Architecture: using source control design:  manyrepo instead of monorepo
   - [Server GitHub Repository](https://github.com/mart337i/fastapi-nginx-gunicorn)
-  - [Dashboard](git@github.com:mart337i/dashboard_fastapi-nginx-gunicorn.git)
+  - [Dashboard](https://github.com/mart337i/dashboard_fastapi-nginx-gunicorn)
   - [Client GrovePi GitHub Repository](https://github.com/mart337i/embeded_device)
   - [Client M5GO GitHub Repository](https://github.com/mart337i/M5GO)
  
