@@ -38,9 +38,11 @@ The Greenhouse Environment Monitoring and Management System is an integrated set
 ![ER diagram](img/Er.png "ER diagram")
 
 ### System Design diagram 
-### Design principles
+![ER diagram](img/Server_design_diagram.png "ER diagram")
 
+### Design principles
 - KISS (Keep It Simple, Stupid): 
+- DRY (Don't Repeat Yourself): 
 
 -------------------------------------------------------------------------------------
 <a name="server-side"></a>
