@@ -27,6 +27,7 @@
 4. [Server Configuration](#server-configuration-1)
 5. [Still missing](#still_missing)
 6. [conclusion](#conclusion)
+7. [glossary](#glossary)
 
 <a name="introduction"></a>
 
@@ -882,3 +883,22 @@ This project has personally given me knowlegde about how to set up production re
 
 I have also gained knowlegde in the usage of unix based systems and look forward to learn more about the capability 
 
+<a name="glossary" ></a>
+## Glossary
+
+- **API (Application Programming Interface)**: A set of rules that allows programs to interact with each other, facilitating data exchange and integration.
+- **Client**: The requesting program in a client/server relationship; typically, a user interface that allows interaction with the server.
+- **Dashboard**: A user interface that organizes and presents information in an easy to read and change values.
+- **ER (Entity-Relationship) Diagram**: A diagram that shows the relationships of entity sets stored in a database.
+- **Gunicorn**: A Python WSGI HTTP Server for UNIX systems, designed to serve fast web applications.
+- **IoT (Internet of Things)**: The interconnection of computing devices embedded in everyday objects, enabling them to send and receive data.
+- **Linux**: An open-source operating system that is the foundation of many servers and embedded systems.
+- **MariaDB**: A community-developed fork of the MySQL relational database management system, intended to remain free under the GNU GPL.
+- **Monorepo**: A software development strategy where code for many projects is stored in the same repository.
+- **Manyrepo**: A software development strategy where code for many projects is stored in many diffrent repositorys to keep the project organized.
+- **NGINX**: A web server that can also be used as a reverse proxy, load balancer, mail proxy, and HTTP cache.
+- **Raspberry Pi OS Lite**: A lightweight version of the Raspberry Pi operating system without a graphical user interface.
+- **SSH (Secure Shell)**: A cryptographic network protocol for secure data communication, remote command-line login, remote command execution, and other secure network services between two networked computers.
+- **Supervisor**: A client/server system that allows users to monitor and control a number of processes on UNIX-like operating systems.
+- **SystemD**: A system and service manager for Linux operating systems that uses units to manage system resources.
+- **Uvicorn**: A lightning-fast ASGI server for Python, used as the foundation for frameworks like FastAPI.
