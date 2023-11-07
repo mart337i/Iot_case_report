@@ -1,6 +1,6 @@
 # Embedded Programming Report
 
-![fontpage](img/frontpage.png "fontpage")
+![frontpage](img/frontpage.png "fontpage")
 
 ## Table of Contents
 
@@ -32,13 +32,13 @@
 
 ## Introduction
 
-The Greenhouse Environment Monitoring and Management System is an integrated setup combining embedded devices, a centralized server, and seamless networking. It provides continuous monitoring of conditions like temperature and humidity, ensuring ideal plant growth. Sensor data can be analyzed via a website or by the system it self, it will push alarms if any anomalies occurs. This cohesive system ensures agricultural efficiency and proactive management of greenhouse environments.
+The Greenhouse Environment Monitoring and Management System is an integrated setup combining embedded devices, a centralized server, and seamless networking. It provides continuous monitoring of conditions like temperature and humidity, ensuring ideal plant growth. Sensor data can be analyzed via a website or by the system itself, it will push alarms if any anomalies occurs. This cohesive system ensures agricultural efficiency and proactive management of greenhouse environments.
 
 -------------------------------------------------------------------------------------
 
 ## Architecture
 
-- Service-Oriented Architecture: using souce control design:  manyrepo instead of monorepo
+- Service-Oriented Architecture: using source control design:  manyrepo instead of monorepo
   - [Server GitHub Repository](https://github.com/mart337i/fastapi-nginx-gunicorn)
   - [Client GrovePi GitHub Repository](https://github.com/mart337i/embeded_device)
   - [Client M5GO GitHub Repository](https://github.com/mart337i/M5GO)
@@ -64,7 +64,7 @@ The Greenhouse Environment Monitoring and Management System is an integrated set
 
 #### About the Server
 
-The server is runnign Raspberry Pi OS Lite which is a lightweight version of the Raspberry Pi operating system, based on Debian Linux.
+The server is running Raspberry Pi OS Lite which is a lightweight version of the Raspberry Pi operating system, based on Debian Linux.
 
  It is optimized for the Raspberry Pi hardware and is a command-line only interface, meaning no graphical desktop.
 
