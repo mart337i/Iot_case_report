@@ -25,6 +25,8 @@
      - [How to Use It](#how-to-use-it-4)
      - [Tools and Frameworks](#tools-and-frameworks-4)
 4. [Server Configuration](#server-configuration-1)
+5. [Still missing](#still_missing)
+6. [conclusion](#conclusion)
 
 <a name="introduction"></a>
 
@@ -845,6 +847,7 @@ Not all of the following has been used but is still consideres part of the Code 
     [I18N] for changes in translation files;
 
 ```
+<a name="still_missing"></a>
 
 ### Still missing overall
 
@@ -854,4 +857,12 @@ Not all of the following has been used but is still consideres part of the Code 
 - auth0 for dashboard (Maybe over engineering)
 - Hide nginx version i network tab
 - Block accses to doc files 
+
+
+<a name="conclusion" ></a>
+## Conclusion
+
+This project has personally given me knowlegde about how to set up production ready api's and server set ups. While there is still a lot to be done to make it acceptiable to be used in enterprise level production, i feel many steps ahead of then i first started the project. 
+
+I have also gained knowlegde in the usage of unix based systems and look forward to learn more about the capability 
 
