@@ -7,17 +7,22 @@
 1. [Introduction](#introduction)
 2. [Server Side](#server-side)
    - [Main API](#main-api)
-     - [About the API](#about-the-api)
-     - [How to Use It](#how-to-use-it)
+     - [About the Server](#about-the-server)
+     - [Main API and endpoints](#main-api-and-endpoints)
+     - [How to Use It](#how-to-use-it-2)
      - [Tools and Frameworks](#tools-and-frameworks)
    - [Dashboard API and Website](#dashboard-api-and-website)
+     - [About the Dashboard](#about-the-dashboard)
+     - [How to Use It](#how-to-use-it-1)
      - [Tools and Frameworks](#tools-and-frameworks-1)
-   - [Server Configuration](#server-configuration)
-     - [Tools and Frameworks](#tools-and-frameworks-2)
 3. [Client Side](#client-side)
    - [Linux Based Client](#linux-based-client)
+     - [About the Client](#about-the-client)
+     - [How to Use It](#how-to-use-it-3)
      - [Tools and Frameworks](#tools-and-frameworks-3)
    - [Embedded Device](#embedded-device)
+     - [About the Device](#about-the-device)
+     - [How to Use It](#how-to-use-it-4)
      - [Tools and Frameworks](#tools-and-frameworks-4)
 4. [Server Configuration](#server-configuration-1)
 
@@ -52,7 +57,17 @@ The Greenhouse Environment Monitoring and Management System is an integrated set
 
 ## Server Side
 
-<a name="main-api"></a>
+
+<a name="about-the-server"></a>
+
+#### About the Server
+
+The server is runnign Raspberry Pi OS Lite which is a lightweight version of the Raspberry Pi operating system, based on Debian Linux.
+
+ It is optimized for the Raspberry Pi hardware and is a command-line only interface, meaning no graphical desktop.
+
+
+<a name="main-api-and-endpoints"></a>
 
 ### Main API and endpoints
 
@@ -280,6 +295,33 @@ GET /get_all_sensor_serial_numbers
 Retrieves all sensor serial numbers in the system.
 </details>
 
+<a name="how-to-use-it-2"></a>
+
+#### How to Use It
+
+```bash 
+
+Server commands
+
+Nginx
+commands
+systemctl enable nginx.service
+systemctl start nginx.service
+systemctl status nginx.service
+systemctl restart nginx.service
+
+superviser
+sudo supervisorctl reread
+sudo supervisorctl update
+sudo supervisorctl status fastapi-app
+sudo supervisorctl restart fastapi-app
+
+Gunicorn
+Test socket
+curl --unix-socket /home/sysadmin/code/fastapi-nginx-gunicorn/run/gunicorn.sock meo.local/<endpoint address>
+
+```
+
 <a name="tools-and-frameworks"></a>
 
 #### Tools and Frameworks
@@ -335,7 +377,7 @@ Retrieves all sensor serial numbers in the system.
 
 #### About the Dashboard
 
-The dashboard is a seprate application to the main API(FastApi-app) and it get 
+The dashboard is a seprate application to the main API(FastApi-app) and there fore gets all the displayed data from the main api. 
 
 <a name="how-to-use-it-1"></a>
 
@@ -355,6 +397,13 @@ sudo supervisorctl reread
 sudo supervisorctl update
 sudo supervisorctl status dashboard
 sudo supervisorctl restart dashboard
+
+#You can test the front page via the following
+curl http://meo.local/
+# Now if you want the values the dashboard gets you can call the following 2 endpoints
+curl http://meo.local/api/threshold-settings/
+# and 
+curl http://meo.local/api/dashboard//
 
 ```
 
@@ -398,51 +447,6 @@ sudo supervisorctl restart dashboard
     - A Python WSGI HTTP Server for UNIX systems that serves as a reliable and efficient interface between web applications and web servers.
 
 
-<a name="server-configuration"></a>
-
-### Server Configuration
-
-<a name="about-the-server"></a>
-
-#### About the Server
-
-The server is runnign Raspberry Pi OS Lite which is a lightweight version of the Raspberry Pi operating system, based on Debian Linux.
-
- It is optimized for the Raspberry Pi hardware and is a command-line only interface, meaning no graphical desktop.
-
-<a name="how-to-use-it-2"></a>
-
-#### How to Use It
-
-```bash 
-
-Server commands
-
-Nginx
-commands
-systemctl enable nginx.service
-systemctl start nginx.service
-systemctl status nginx.service
-systemctl restart nginx.service
-
-superviser
-sudo supervisorctl reread
-sudo supervisorctl update
-sudo supervisorctl status fastapi-app
-sudo supervisorctl restart fastapi-app
-
-Gunicorn
-Test socket
-curl --unix-socket /home/sysadmin/code/fastapi-nginx-gunicorn/run/gunicorn.sock localhost/test
-
-```
-
-<a name="tools-and-frameworks-2"></a>
-
-#### Tools and Frameworks
-
-//List and description of tools and frameworks used for server configuration
-
 -------------------------------------------------------------------------------------
 
 <a name="client-side"></a>
@@ -463,7 +467,22 @@ The client is a raspberry 3 using grovepi sensors
 
 #### How to Use It
 
-//Instructions on how to use the Linux-based client
+Using an ssh client on the client device and use the following `git clone git@github.com:mart337i/embeded_device.git`
+
+Make sure python3 is installed along with everything in the requirements.txt file
+The requirements.txt can be installed with `python3 -m pip<version> -r requirements.txt`
+
+and then just setup the [Systemd](#Systemd_config) unit file and run the systemd commands shown below
+
+**systemd commands** 
+```bash
+
+systemctl enable <name of service>.service
+systemctl start <name of service>.service
+systemctl status <name of service>.service
+systemctl restart <name of service>.service
+
+```
 
 <a name="tools-and-frameworks-3"></a>
 
@@ -479,6 +498,7 @@ The client is a raspberry 3 using grovepi sensors
     The main benefit is the automatic start on boot and the auto restart on failiure.
     <br/><br/>
 
+  <a name="Systemd_config"></a>
   - SystemD config
 
     ```bash
@@ -521,19 +541,36 @@ The client is a raspberry 3 using grovepi sensors
 
 #### About the Device
 
-//Details about the embedded device
+I am using the M5GO, powered by the ESP32 chip, which is an embedded device designed for IoT applications, capable of collecting data from APIs. It features a dual-core processor, Wi-Fi connectivity, and 16M flash memory.
 
 <a name="how-to-use-it-4"></a>
 
 #### How to Use It
 
-//Instructions on how to use the embedded device
+To use the program simply run `git clone git@github.com:mart337i/embeded_device.git` from the device you are deploying with using platformIO. And then simply press the `->` to upload(Also and image below)
+
+![PlatformIO upload](img/platformIO_upload.png "platform io upload")
 
 <a name="tools-and-frameworks-4"></a>
 
 #### Tools and Frameworks
 
-//List and description of tools and frameworks used for the embedded device
+- Platform `.ini` file 
+  ```INI
+
+  [env:m5stack-core-esp32]
+  platform = espressif32
+  board = m5stack-core-esp32
+  framework = arduino
+  lib_deps = 
+    M5Stack
+    ArduinoJson
+    time
+    m5stack/M5Unit-ENV@^0.0.8
+    adafruit/Adafruit NeoPixel@^1.11.0
+
+  
+  ```
 
 <a name="server-configuration-1"></a>
 
@@ -737,6 +774,15 @@ stdout_logfile=/home/pi/code/dashboard_fastapi-nginx-gunicorn/logs/gunicorn-erro
 ```
 
 ### Firewall settings
+The ports specified below are required open:
+
+- **OpenSSH**: This rule allows remote logins via the SSH (Secure Shell) protocol, which by default uses port 22. This is essential for securely managing the server remotely.
+- **22**: This explicitly allows traffic on port 22, which is the default port for SSH connections.
+- **80**: This opens up port 80, which is the default port used for HTTP traffic.
+- **443**: This port is for HTTPS traffic, which is HTTP over TLS/SSL, providing secure web browsing (i chould close this becouse i dont use https, but i am keeping it open for further development).
+
+The rules are duplicated for IPv6 traffic (indicated by `(v6)`), ensuring the server accepts connections via both IPv4 and IPv6 protocols on these ports.
+
 
 ```bash
 Status: active
