@@ -31,8 +31,11 @@ The Greenhouse Environment Monitoring and Management System is an integrated set
 
 ## Architecture
 
-- Service-Oriented Architectures: using souce control disign:  manyrepo instead of monorepo
-- 
+- Service-Oriented Architecture: using souce control design:  manyrepo instead of monorepo
+  - [Server GitHub Repository](https://github.com/mart337i/fastapi-nginx-gunicorn)
+  - [Client GrovePi GitHub Repository](https://github.com/mart337i/embeded_device)
+  - [Client M5GO GitHub Repository](https://github.com/mart337i/M5GO)
+ 
 
 ### ER diagram
 ![ER diagram](img/Er.png "ER diagram")
