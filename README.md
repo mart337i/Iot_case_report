@@ -50,6 +50,7 @@ The Greenhouse Environment Monitoring and Management System is an integrated set
 
 ### System Design diagram 
 ![ER diagram](img/Server_design_diagram.png "ER diagram")
+**Note:** The urls defined af `http://meo.local` and `http://meo.local/api/` are routes defined by Nginx, that passes tdp packages to the correct urls.
 
 ### Design principles
 - KISS (Keep It Simple, Stupid): 
