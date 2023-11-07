@@ -295,6 +295,22 @@ GET /get_all_sensor_serial_numbers
 ```
 
 Retrieves all sensor serial numbers in the system.
+
+```http
+POST /set_working_hours/
+Content-Type: application/json
+
+{
+  "morning_hour": [morning_hour],
+  "morning_minute": [morning_minute],
+  "evening_hour": [evening_hour],
+  "evening_minute": [evening_minute]
+}
+```
+
+Endpoint to create working hours configuration.
+
+
 </details>
 
 <a name="how-to-use-it-2"></a>
