@@ -915,7 +915,7 @@ Not all of the following has been used but is still consideres part of the Code 
 - SSL Cert
   - Using Secure Sockets Layer (SSL) certificate would enable tcp encryption and therefore make man-in-middle attacks harder to accomplice. 
 - Auth0 (Maybe over engineering)
-  - Auth0 is an identity platform to add authentication and authorization. Auth0 would enable users to authenticate themself at diffrent levels of the application. depending on futere development this chould be setup with Nginx to lock down the network the application oprates at. It also provides crossplatform authentication
+  - Auth0 is an identity platform to add authentication and authorization. Auth0 would enable users to authenticate themself at diffrent levels of the application. depending on futere development this chould be setup with Nginx to lock down the network the application oprates at. It also provides crossplatform authentication.
 - Hide nginx version i network tab
   - This is a commen security messure and is done to make it harder to now what exploits the nginx server is vulnerable.
   A good example of how easy it is find, here is a [link](https://www.cvedetails.com/vulnerability-list/vendor_id-10048/Nginx.html) with a list of known vulnerabilities 
@@ -944,7 +944,7 @@ I have gained knowlegde in the usage of unix based systems and look forward to l
 - **Linux**: An open-source operating system that is the foundation of many servers and embedded systems.
 - **MariaDB**: A community-developed fork of the MySQL relational database management system, intended to remain free under the GNU GPL.
 - **Monorepo**: A software development strategy where code for many projects is stored in the same repository.
-- **Manyrepo**: A software development strategy where code for many projects is stored in many diffrent repositorys to keep the project organized.
+- **Manyrepo**: A software development strategy where code for many projects is stored in many diffrent repositories to keep the project organized.
 - **NGINX**: A web server that can also be used as a reverse proxy, load balancer, mail proxy, and HTTP cache.
 - **Raspberry Pi OS Lite**: A lightweight version of the Raspberry Pi operating system without a graphical user interface.
 - **SSH (Secure Shell)**: A cryptographic network protocol for secure data communication, remote command-line login, remote command execution, and other secure network services between two networked computers.
