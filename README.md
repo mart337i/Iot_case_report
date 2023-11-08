@@ -1,4 +1,5 @@
 # Embedded Programming Report
+###### case  2
 
 ![frontpage](img/frontpage.png "fontpage")
 
@@ -33,7 +34,7 @@
 
 ## Introduction
 
-The Greenhouse Environment Monitoring and Management System is an integrated setup combining embedded devices, a centralized server, and seamless networking. It provides continuous monitoring of conditions like temperature and humidity, ensuring ideal plant growth. Sensor data can be analyzed via a website or by the system itself, it will push alarms if any anomalies occurs. This cohesive system ensures agricultural efficiency and proactive management of greenhouse environments.
+Environment Monitoring and Management System by Greenhouse A/S, is an integrated setup combining embedded devices, a centralized server, and seamless networking. It provides continuous monitoring of conditions like temperature and humidity, ensuring ideal plant growth. Sensor data can be analyzed via a website or by the system itself, it will push alarms if any anomalies occurs. This cohesive system ensures agricultural efficiency and proactive management of greenhouse environments.
 
 -------------------------------------------------------------------------------------
 
@@ -607,7 +608,7 @@ This guide assumes that you have PlatformIO installed and set up on your device.
 After completing these steps, the code should be uploaded to your device, and it should be running the program.
 ![PlatformIO upload](img/platformIO_upload.png "platform io upload")
 
-The M5GO will automaticly restart and run the you pushed to it.
+The M5GO will automaticly restart and run the code you pushed to it.
 
 <a name="tools-and-frameworks-4"></a>
 
@@ -907,20 +908,29 @@ Not all of the following has been used but is still consideres part of the Code 
 
 ### Still missing overall
 
-- Fail2ban (SSH Brute-force attack protection)
-- JTW or another token based api security
+- Fail2ban
+  - This service is a well known security mesure that would help combat SSH Brute-force attacks. It work be scanning files like `/var/log/auth.log` and bans IP addresses conducting too many failed login attempts
+- JSON Web Token (JWT) or another token based api security
+  - Using JWT token would help restrict accses to the api endpoint, but would also require client to be able to authenticate itself via a endpoint located on the main api. 
 - SSL Cert
-- auth0 for dashboard (Maybe over engineering)
+  - Using Secure Sockets Layer (SSL) certificate would enable tcp encryption and therefore make man-in-middle attacks harder to accomplice. 
+- Auth0 (Maybe over engineering)
+  - Auth0 is an identity platform to add authentication and authorization. Auth0 would enable users to authenticate themself at diffrent levels of the application. depending on futere development this chould be setop with Nginx to lock down the network the application oprates at. It also provides crossplatform authentication
 - Hide nginx version i network tab
+  - This is a commen security messure and is done to make it harder to now what exploits the nginx server is vulnerable.
+  A good example of how easy it is find, here is a [link](https://www.cvedetails.com/vulnerability-list/vendor_id-10048/Nginx.html) with a list of known vulnerabilities 
 - Block accses to doc files 
+  - This is done to not expose api endpoints for an attacker to find and exploit
 
 
 <a name="conclusion" ></a>
 ## Conclusion
 
-This project has personally given me knowlegde about how to set up production ready api's and server set ups. While there is still a lot to be done to make it acceptiable to be used in enterprise level production, i feel many steps ahead of then i first started the project. 
+This project has personally given me knowlegde about how to set up production ready api's and server set-ups. While there is still a lot to be done to make it acceptiable to be used in enterprise level production, i feel many steps ahead of then i first started the project. 
 
-I have also gained knowlegde in the usage of unix based systems and look forward to learn more about the capability 
+I have gained knowlegde in the usage of unix based systems and look forward to learn more about the capability of linux. I have also gained knowlegede about how Iot devices can be used to help automate and control devices around us, making our work ligher and, or easier. 
+
+
 
 <a name="glossary" ></a>
 ## Glossary
