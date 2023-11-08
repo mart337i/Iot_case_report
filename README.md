@@ -488,22 +488,22 @@ The client is a raspberry 3 using grovepi sensors
 
 #### How to Use It
 
-### Step 1: Connecting via SSH
+##### Step 1: Connecting via SSH
 1. Open your SSH client of choice on your computer.
 2. Connect to the client device using its IP address or hostname.
 
-### Step 2: Cloning the Repository
+##### Step 2: Cloning the Repository
 1. Once connected via SSH, navigate to the directory where you want to clone the repository.
 2. Clone the `embedded_device` repository using the following command: `git clone git@github.com:mart337i/embeded_device.git`
 
-### Step 3: Installing Python and Dependencies
+##### Step 3: Installing Python and Dependencies
 1. Ensure Python 3 is installed on the client device. If not, install it using the device's package manager.
 2. Navigate to the repository directory: `cd embeded_device`
 
 3. Install the required Python packages listed in `requirements.txt` with the following command: `python3 -m pip install -r requirements.txt`
 
 
-### Step 4: Setting Up Systemd Service
+##### Step 4: Setting Up Systemd Service
 1. Set up the Systemd unit file by creating a new file with the `.service` extension in the `/etc/systemd/system/` directory.
 2. Copy the Systemd configuration from the provided [Systemd](#Systemd_config) section into this new file.
 3. Run the systemd commands listed below in that order
