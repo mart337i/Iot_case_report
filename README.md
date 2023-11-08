@@ -51,7 +51,7 @@ The Greenhouse Environment Monitoring and Management System is an integrated set
 
 ### System Design diagram 
 ![ER diagram](img/Server_design_diagram.png "ER diagram")
-**Note:** The urls defined af `http://meo.local` and `http://meo.local/api/` are routes defined by Nginx, that passes tdp packages to the correct urls.
+**Note:** The urls defined at `http://meo.local` and `http://meo.local/api/` are routes defined by Nginx, that passes tdp packages to the correct urls.
 
 ### Design principles
 - KISS (Keep It Simple, Stupid): 
@@ -364,8 +364,10 @@ curl --unix-socket /home/sysadmin/code/fastapi-nginx-gunicorn/run/gunicorn.sock 
       - My Config -> [Gunicorn](#gunicorn-configuration)
 
   - Uvicorn (TLDR: Webserver)
-    - This is part of FASTapi python framework
+    - This is part of FASTapi python framework and works as an ASGI web server implementation for Python.
+    
   - Mariadb (TLDR : Database)
+  
   - Superviser (TLDR: SystemD but more encapsulated )
 
     - Supervisor is a client/server system that allows its users to monitor and control a number of processes on UNIX-like operating systems.
@@ -376,6 +378,8 @@ curl --unix-socket /home/sysadmin/code/fastapi-nginx-gunicorn/run/gunicorn.sock 
     -  A modern, fast web framework for building APIs with Python based on standard Python type hints.
   - SQLAlchemy: 
     - A powerful SQL toolkit and Object-Relational Mapping (ORM) library for Python that allows for flexible database access and management.
+  - SQLModel
+    - SQLModel is, a thin layer on top of Pydantic and SQLAlchemy, that is designed to simplify interacting with SQL databases in FastAPI applications
   - uvicorn: 
     - An ASGI server implementation for Python, serving as a lightning-fast foundation for ASGI applications like those built with FastAPI.
   - logging: 
@@ -398,7 +402,7 @@ curl --unix-socket /home/sysadmin/code/fastapi-nginx-gunicorn/run/gunicorn.sock 
 
 #### About the Dashboard
 
-The dashboard is a seprate application to the main API(FastApi-app) and there fore gets all the displayed data from the main api. 
+The dashboard is a seprate application to the main API(FastApi-app) and therefore gets all the displayed data from the main api. 
 
 <a name="how-to-use-it-1"></a>
 
@@ -525,11 +529,11 @@ systemctl restart <name of service>.service
 - SystemD
 
   - systemd is system and service manager for most Unix like operating systems
-    As the system boots up, the first process created, i.e. init process with
-    PID = 1, is systemd system that initiates the userspace services.
+    As the system boots up, the first process created
+    with process id : `PID = 1` thats systemd. Sytemd then starts/creates the rest of the userspace. 
 
     For this project it is used to start the client service, to collect information from the sensors.
-    The main benefit is the automatic start on boot and the auto restart on failiure.
+    The main benefit is the automatic start on boot and the auto restart on failiure, alongside its loging capabilities using `journalctl -f -u <process name>` in this case `-f` is for following the log and `-u` is a systemd unit / service 
     <br/><br/>
 
   <a name="Systemd_config"></a>
