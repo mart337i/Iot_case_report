@@ -1,5 +1,9 @@
 # Embedded Programming Report
 ###### case  2
+Report stats: 
+- Reading Time: 19 mins 
+- Chars: 27.429
+- words 3.566
 
 ![frontpage](img/frontpage.png "fontpage")
 
@@ -951,3 +955,8 @@ I have gained knowlegde in the usage of unix based systems and look forward to l
 - **Supervisor**: A client/server system that allows users to monitor and control a number of processes on UNIX-like operating systems.
 - **SystemD**: A system and service manager for Linux operating systems that uses units to manage system resources.
 - **Uvicorn**: A lightning-fast ASGI server for Python, used as the foundation for frameworks like FastAPI.
+
+------
+
+##### Writen by: 
+Martin Egeskov Olsen
