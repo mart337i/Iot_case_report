@@ -475,6 +475,8 @@ curl http://meo.local/api/dashboard//
     - A standard Python library for implementing flexible event logging systems for applications and libraries.
   - gunicorn: 
     - A Python WSGI HTTP Server for UNIX systems that serves as a reliable and efficient interface between web applications and web servers.
+  - HTMX
+    - HTMX is the HTML extension syntax that replaces JavaScript with simple markup
 
 
 -------------------------------------------------------------------------------------
