@@ -2,8 +2,6 @@
 ###### case  2
 Report stats: 
 - Reading Time: 19 mins 
-- Chars: 27.429
-- words 3.566
 
 ![frontpage](img/frontpage.png "fontpage")
 
